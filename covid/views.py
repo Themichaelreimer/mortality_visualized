@@ -9,14 +9,31 @@ def get_cases(request) -> JsonResponse:
 
     region_name = body.get('region')
     parent = body.get('country')
-    region = business.lookup_region(region_name, parent)
 
-    cases = business.get_region_timeseries(region)
+    if parent and not region_name:
+        region_name = parent
+        parent = None
+
+    region = business.lookup_region(region_name, parent)
+    cases = business.get_region_cases_timeseries(region)
+
     return JsonResponse(cases)
 
 
 def get_deaths(request) -> JsonResponse:
-    pass
+    body = request.POST
+
+    region_name = body.get('region')
+    parent = body.get('country')
+
+    if parent and not region_name:
+        region_name = parent
+        parent = None
+
+    region = business.lookup_region(region_name, parent)
+    cases = business.get_region_deaths_timeseries(region)
+
+    return JsonResponse(cases)
 
 
 def get_regions(request) -> JsonResponse:

@@ -59,16 +59,59 @@ def lookup_region(region_name: str, subregion_name: str) -> Region:
     return query.lookup_region(region_name,subregion_name)
 
 
-def get_region_timeseries(region: Region) -> dict:
+def get_region_cases_timeseries(region: Region) -> dict:
     """
     Returns a dict mapping dates to case numbers.
     Note that we're returning the number of new cases, not cumulative
 
     :param region: Region we're concerned with
-    :return:
+    :return: dict mapping dates to new cases
     """
-    cases = query.get_region_cases_delta(region)
-    return cases
+    children = query.get_regions_children(region)
+    if len(children) == 0:
+        cases = query.get_region_cases_delta(region)
+        return cases
+    else:
+        result = {}
+        for child in children:
+            cases = query.get_region_cases_delta(child)
+            for date in cases.keys():
+                if date in result.keys():
+                    result[date] += cases[date]
+                else:
+                    result[date] = cases[date]
+
+        return result
+
+
+def get_region_deaths_timeseries(region: Region) -> dict:
+    """
+    Returns a dict mapping dates to case numbers.
+    Note that we're returning the number of new cases, not cumulative
+
+    :param region: Region we're concerned with
+    :return: dict mapping dates to new cases
+    """
+    children = query.get_regions_children(region)
+    if len(children) == 0:
+        deaths = query.get_region_deaths_delta(region)
+        return deaths
+    else:
+        result = {}
+        for child in children:
+            deaths = query.get_region_deaths_delta(child)
+            for date in deaths.keys():
+                if date in result.keys():
+                    result[date] += deaths[date]
+                else:
+                    result[date] = deaths[date]
+
+        return result
+
+
+def get_region_timeseries(region: Region) -> dict:
+    pass
+    # TODO: This should give cases *and* deaths
 
 
 def process_row(row: dict, is_cases: bool):

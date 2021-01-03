@@ -22,5 +22,6 @@ urlpatterns = [
     #path('admin/', admin.site.urls),
     path('regions/', covid_views.get_regions),
     path('cases/', covid_views.get_cases),
+    path('deaths/', covid_views.get_deaths),
     # TODO: Deaths
 ]

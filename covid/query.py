@@ -17,7 +17,7 @@ def ensure_region(name: str, parent=None):
 def lookup_region(region_name: str, parent_name: str):
     if parent_name:
         return Region.objects.get(name=region_name, parent__name=parent_name)
-    return Region.object.get(name=region_name)
+    return Region.objects.get(name=region_name)
 
 
 def get_regions_children(region: Region):
@@ -71,6 +71,35 @@ def get_region_cases_delta(region: Region, date_start=None, date_end=None) -> di
         if i == 0:
             continue
         result[helpers.date_fmt(case.date)] = case.cumulative - cases[i-1].cumulative
+
+    return result
+
+
+def get_region_deaths_delta(region: Region, date_start=None, date_end=None) -> dict:
+    """
+    Dict mapping dates to new cases
+    :param region:
+    :param date_start:
+    :param date_end:
+    :return:
+    """
+
+    query = {
+        'region': region,
+    }
+
+    if date_start:
+        query['date__gte'] = date_start
+    if date_end:
+        query['date__lte'] = date_end
+
+    deaths = Deaths.objects.filter(**query).order_by("date")
+    result = dict()
+
+    for i, death in enumerate(deaths):
+        if i == 0:
+            continue
+        result[helpers.date_fmt(death.date)] = death.cumulative - deaths[i - 1].cumulative
 
     return result
 
