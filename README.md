@@ -9,7 +9,9 @@ Frontend: Vue.js
 
 # Setup
 TODO: Flesh this out more
+
 - Install python3, pip, django
+
 - Install mysql, set up user. Check mortality/settings.py for credentials you should use.
 
 # Project Areas
@@ -27,4 +29,5 @@ TODO: Flesh this out more
 
 ## Data Sources:
 Johns Hopkins: Covid time series data
+
 Human Mortality Database: death statistics by ICD code
