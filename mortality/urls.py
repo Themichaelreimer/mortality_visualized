@@ -16,6 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+import covid.views as covid_views
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    #path('admin/', admin.site.urls),
+    path('regions/', covid_views.get_regions),
+    path('cases/', covid_views.get_cases),
+    # TODO: Deaths
 ]
