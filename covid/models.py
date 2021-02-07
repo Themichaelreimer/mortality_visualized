@@ -3,7 +3,7 @@ from django.db import models
 
 class Region(models.Model):
     name = models.CharField(max_length=128, default="")
-    parent = models.ForeignKey("self", null=True, on_delete=models.PROTECT)
+    #parent = models.ForeignKey("self", null=True, on_delete=models.PROTECT)
 
     def __str__(self):
         if self.parent:
@@ -17,7 +17,7 @@ class Region(models.Model):
             'parent': self.parent.name if self.parent else None
         }
 
-
+'''
 class Cases(models.Model):
     region = models.ForeignKey(Region, null=False, on_delete=models.PROTECT)
     date = models.DateTimeField()
@@ -34,3 +34,5 @@ class Deaths(models.Model):
     region = models.ForeignKey(Region, null=False, on_delete=models.PROTECT)
     date = models.DateTimeField()
     cumulative = models.IntegerField(default=0)
+
+'''

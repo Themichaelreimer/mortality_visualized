@@ -5,8 +5,9 @@ import covid.helpers as helpers
 
 from typing import List
 
-regions_cache = query.get_regions()
+'''
 
+regions_cache = query.get_regions()
 
 def __cache_get(region: str, parent_region: str) -> Region:
     """
@@ -133,3 +134,5 @@ def process_row(row: dict, is_cases: bool):
         query.new_cases(new_row)
     else:
         query.new_deaths(new_row)
+
+'''

@@ -23,7 +23,7 @@ def lookup_region(region_name: str, parent_name: str):
 def get_regions_children(region: Region):
     return list(Region.objects.filter(parent=region))
 
-
+'''
 def new_cases(row: dict):
     """ Row is a dict with the keys and values matching Cases in models.py """
     Cases.objects.update_or_create(**row)
@@ -116,3 +116,5 @@ def get_region_cases_cumulative(region: Region, date_start=None, date_end=None) 
 
     result = Cases.objects.filter(**query).order_by("date")
     return list(result)
+
+'''
