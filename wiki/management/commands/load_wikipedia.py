@@ -5,6 +5,8 @@ import os
 from bs4 import BeautifulSoup
 from typing import List, Tuple
 
+import wiki.business as business
+
 
 class Command(BaseCommand):
     help = 'Loads wikipedia HTML into the articles table. Should run after wikipedia_collector.py'
@@ -30,8 +32,20 @@ class Command(BaseCommand):
             html = f.read()
 
             soup = BeautifulSoup(html, features='html.parser')
-            import pdb
-            pdb.set_trace()
+            title = self.get_title(soup)
+            first, text = self.get_text(soup)
+            disease = self.process_infobox(soup, title)
+
+            disease.print()
+
+            article = {
+                'title': title,
+                'first_sentence': first,
+                'disease': disease
+            }
+
+            business.create_article(article)
+
 
     @staticmethod
     def get_title(soup: BeautifulSoup) -> str:
@@ -57,7 +71,7 @@ class Command(BaseCommand):
         return first, text
 
     @staticmethod
-    def get_infobox(soup: BeautifulSoup) -> Infobox:
+    def process_infobox(soup: BeautifulSoup, title:str):
         '''
         Looks for infoboxes on the page, and parses them into an infobox object - which is just
         a collection of data generally found in infoboxes
@@ -65,3 +79,29 @@ class Command(BaseCommand):
         :param soup:
         :return:
         '''
+        data = {'name': title}
+        tables = soup.find_all('table', {'class': 'infobox'})
+        for table in tables:
+            for row in table.findChildren('tr'):
+
+                header = row.findChildren('th')
+                if header:
+                    header = header[0].text.lower()
+
+                    if header == 'classification':
+                        # Extracts ICD-10 class
+                        text = row.text
+                        toks = text.split('ICD')
+                        if len(toks) > 1:
+                            token = toks[1]
+                            if ':' in token:
+                                data['ICD-10'] = token.split(':')[1].strip()
+
+                value = row.findChildren('td')
+                if value:
+                    value = value[0].text.lower()
+
+                if header and value:
+                    data[header] = value
+
+        return business.handle_infobox(data)
