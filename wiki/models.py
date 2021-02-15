@@ -58,56 +58,56 @@ class WikiMortalityRate(models.Model):
 
 
 class WikiSymptom(models.Model):
-    name = models.CharField(default="", max_length=255, unique=True)
+    name = models.CharField(default="", max_length=512)
 
     def __str__(self):
         return self.name
 
 
 class WikiRiskFactor(models.Model):
-    name = models.CharField(default="", max_length=255, unique=True)
+    name = models.CharField(default="", max_length=512)
 
     def __str__(self):
         return self.name
 
 
 class WikiTreatment(models.Model):
-    name = models.CharField(default="", max_length=255, unique=True)
+    name = models.CharField(default="", max_length=512)
 
     def __str__(self):
         return self.name
 
 
 class WikiPrevention(models.Model):
-    name = models.CharField(default="", max_length=255, unique=True)
+    name = models.CharField(default="", max_length=512)
 
     def __str__(self):
         return self.name
 
 
 class WikiDiagnosticMethod(models.Model):
-    name = models.CharField(default="", max_length=255, unique=True)
+    name = models.CharField(default="", max_length=512)
 
     def __str__(self):
         return self.name
 
 
 class WikiMedication(models.Model):
-    name = models.CharField(default="", max_length=255, unique=True)
+    name = models.CharField(default="", max_length=512)
 
     def __str__(self):
         return self.name
 
 
 class WikiSpecialty(models.Model):
-    name = models.CharField(default="", max_length=255, unique=True)
+    name = models.CharField(default="", max_length=512)
 
     def __str__(self):
         return self.name
 
 
 class WikiCause(models.Model):
-    name = models.CharField(default="", max_length=255, unique=True)
+    name = models.CharField(default="", max_length=512)
 
     def __str__(self):
         return self.name
@@ -123,6 +123,7 @@ class WikiDisease(models.Model):
     """
     name = models.CharField(default="", max_length=255, unique=True)
     other_names = models.TextField(default="")
+    icd10 = models.CharField(max_length=16)
     specialty = models.ManyToManyField(WikiSpecialty)
     frequency = models.ManyToManyField(WikiFrequency)
     mortality_rate = models.ManyToManyField(WikiCaseFatalityRate)
@@ -136,6 +137,11 @@ class WikiDisease(models.Model):
     medications = models.ManyToManyField(WikiMedication)
     causes = models.ManyToManyField(WikiCause)
     #duration? usual onset? types?
+    # TODO: Differential Diagnosis should be scrapable
+
+    def __str__(self):
+        return self.name
+
 
     def print(self):
         print("======================================================")

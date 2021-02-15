@@ -12,15 +12,16 @@ PAGES = '0-9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'.split(',')
 '''
 
 
-def get_page(url:str) -> str:
+def get_page(url: str) -> str:
     ''' Returns a page's html '''
     time.sleep(4.0)
     page = requests.get(url)
     if page.status_code == 200:
         return page.text
     return ''
-    
-def is_link_valid(href:str) -> bool:
+
+
+def is_link_valid(href: str) -> bool:
     # Nav Link
     if '#' in href:
         return False
@@ -32,7 +33,8 @@ def is_link_valid(href:str) -> bool:
         return False
     return True
 
-def get_links_from_page(html:str) -> List[str]:
+
+def get_links_from_page(html: str) -> List[str]:
     ''' Returns a list of links from a page '''
     result = []
     soup = BeautifulSoup(html, features='html.parser')
@@ -53,10 +55,10 @@ def get_title(html: str) -> str:
     return ''
 
 
-def save_webpage(name:str, html: str) -> None:
+def save_webpage(name: str, html: str) -> None:
     ''' Saves html with a given file name '''
     path = os.path.join('../../../data', 'wikipedia', name + '.html')
-    with open(path,'w+') as wiki_file:
+    with open(path, 'w+') as wiki_file:
         wiki_file.write(html)
 
 
@@ -72,7 +74,7 @@ def main() -> None:
                 page_html = get_page(link)
                 name = get_title(page_html)
                 if name:
-                    save_webpage(name,page_html)
+                    save_webpage(name, page_html)
             except Exception as e:
                 print("===========================================")
                 print(f"EXCEPTION ON LINK: <{link}>")
@@ -82,4 +84,3 @@ def main() -> None:
 
 if __name__ == "__main__":  
     main()
-        

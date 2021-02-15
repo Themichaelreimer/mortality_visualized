@@ -4,6 +4,8 @@ from typing import Union, List
 from wiki.query import *
 
 
+#region scraper
+
 def is_float(text: str) -> bool:
     try:
         float(text)
@@ -71,7 +73,7 @@ def __try_recognise_ratio(text: str) -> Union[float, None]:
     :param text: input
     :return: float representing the ratio if detected, None otherwise
     """
-    # Maybe this? \d+\.?\d* ?(per|\/)? ?\d+
+    # Maybe use this regex? \d+\.?\d* ?(per|\/)? ?\d+
 
     input = re.sub(r",|'", r'', pre_process_string(text))
     input = re.sub(r"thousand", r"1000 ", input)
@@ -80,6 +82,7 @@ def __try_recognise_ratio(text: str) -> Union[float, None]:
 
     tokens = [x for x in input.split()]
 
+    # Multiplies adjacent numbers and combines the tokens, eg ['2', '1000', 'per' 'year' -> '2000', 'per', 'year']
     tokens = __combine_adjacent_numbers(tokens)
 
     numerator = None
@@ -114,6 +117,12 @@ def handle_infobox(params: dict) -> 'WikiDisease':
 
     other_names = params.get('other_names')
     disease['other_names'] = other_names
+
+    icd10 = params.get('ICD-10')
+    if not icd10:
+        icd10 = params.get('icd-10')
+    if icd10:
+        disease['icd10'] = icd10
 
     specialty = params.get('specialty')
     if specialty:
@@ -193,3 +202,34 @@ def handle_infobox(params: dict) -> 'WikiDisease':
 
     return make_disease(disease)
 
+#endregion
+
+
+def get_disease_info(disease: WikiDisease) -> dict:
+
+    # TODO: Add ICD-10
+    result = {
+        'name': disease.name,
+        'other_names': disease.other_names,
+        'specialty': [x for x in disease.specialty.all()],
+        'frequency': [x for x in disease.frequency.all()],
+        'mortality_rate': [x for x in disease.mortality_rate.all()],
+        'deaths': [x for x in disease.deaths.all()],
+        'symptoms': [x for x in disease.symptoms.all()],
+        'risk_factors': [x for x in disease.risk_factors.all()],
+        'treatments': [x for x in disease.treatments.all()],
+        'preventions': [x for x in disease.preventions.all()],
+        'diagnostic_methods': [x for x in disease.diagnostic_methods.all()],
+        'medications': [x for x in disease.medications.all()],
+        'causes': [x for x in disease.causes.all()]
+    }
+
+    return result
+
+
+def get_diseases_by_symptom(symptom: WikiSymptom) -> List[WikiDisease]:
+    return list(symptom.wikidisease_set.all())
+
+
+def get_diseases_list():
+    return WikiDisease.objects.all()
