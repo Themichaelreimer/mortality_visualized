@@ -57,7 +57,7 @@ def get_title(html: str) -> str:
 
 def save_webpage(name: str, html: str) -> None:
     ''' Saves html with a given file name '''
-    path = os.path.join('../../../data', 'wikipedia', name + '.html')
+    path = os.path.join('data', 'wikipedia', name + '.html')
     with open(path, 'w+') as wiki_file:
         wiki_file.write(html)
 
