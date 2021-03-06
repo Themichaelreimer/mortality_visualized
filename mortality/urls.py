@@ -17,11 +17,13 @@ from django.contrib import admin
 from django.urls import path
 
 import covid.views as covid_views
+import wiki.views as wiki_views
 
 urlpatterns = [
     #path('admin/', admin.site.urls),
     path('regions/', covid_views.get_regions),
     path('cases/', covid_views.get_cases),
     path('deaths/', covid_views.get_deaths),
+    path('diseases/', wiki_views.disease_index),
     # TODO: Deaths
 ]

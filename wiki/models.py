@@ -18,6 +18,11 @@ class WikiFrequency(models.Model):
     frequency_int = models.BigIntegerField(null=True)
     frequency_ratio = models.FloatField(null=True)
 
+    def display_value(self):
+        if self.frequency_ratio:
+            return f'{self.frequency_ratio*100}%'
+        return f'{self.frequency_int * 100 / 7500000000}%'
+
     def __str__(self):
         if self.frequency_int:
             return f"{self.frequency_int}"
@@ -28,6 +33,11 @@ class WikiDeath(models.Model):
     region_name = models.CharField(default='', max_length=255)
     frequency_int = models.BigIntegerField(null=True)
     frequency_ratio = models.FloatField(null=True)
+
+    def display_value(self):
+        if self.frequency_ratio:
+            return f'{self.frequency_ratio*100}%'
+        return f'{self.frequency_int * 100 / 7500000000}%'
 
     def __str__(self):
         if self.frequency_int:
@@ -51,6 +61,11 @@ class WikiMortalityRate(models.Model):
     frequency_int = models.BigIntegerField(null=True)
     frequency_ratio = models.FloatField(null=True)
 
+    def display_value(self):
+        if self.frequency_ratio:
+            return f'{self.frequency_ratio*100}%'
+        return f'{self.frequency_int * 100 / 7500000000}%'
+
     def __str__(self):
         if self.frequency_int:
             return f"{self.frequency_int}"
@@ -61,61 +76,62 @@ class WikiSymptom(models.Model):
     name = models.CharField(default="", max_length=512)
 
     def __str__(self):
-        return self.name
+        return self.name.title()
 
 
 class WikiRiskFactor(models.Model):
     name = models.CharField(default="", max_length=512)
 
     def __str__(self):
-        return self.name
+        return self.name.title()
 
 
 class WikiTreatment(models.Model):
     name = models.CharField(default="", max_length=512)
 
     def __str__(self):
-        return self.name
+        return self.name.title()
 
 
 class WikiPrevention(models.Model):
     name = models.CharField(default="", max_length=512)
 
     def __str__(self):
-        return self.name
+        return self.name.title()
 
 
 class WikiDiagnosticMethod(models.Model):
     name = models.CharField(default="", max_length=512)
 
     def __str__(self):
-        return self.name
+        return self.name.title()
 
 
 class WikiMedication(models.Model):
     name = models.CharField(default="", max_length=512)
 
     def __str__(self):
-        return self.name
+        return self.name.title()
 
 
 class WikiSpecialty(models.Model):
     name = models.CharField(default="", max_length=512)
 
     def __str__(self):
-        return self.name
+        return self.name.title()
 
 
 class WikiCause(models.Model):
     name = models.CharField(default="", max_length=512)
 
     def __str__(self):
-        return self.name
+        return self.name.title()
 
 
 class WikiDisease(models.Model):
     """
-        This class represents the 'endpoint' in the wikipedia parsing pipeline. Entries in this table 		are considered complete.
+        This class represents the 'endpoint' in the wikipedia parsing pipeline. Entries in this table 
+        are considered complete.
         
         I expect almost all the many to many's to have at most one entry, but it was
         designed this way to handle potentially conflicting information. It IS Wikipedia
@@ -123,12 +139,12 @@ class WikiDisease(models.Model):
     """
     name = models.CharField(default="", max_length=255, unique=True)
     other_names = models.TextField(default="")
-    icd10 = models.CharField(max_length=16)
+    icd10 = models.CharField(null=True, max_length=64)
     specialty = models.ManyToManyField(WikiSpecialty)
-    frequency = models.ManyToManyField(WikiFrequency)
-    mortality_rate = models.ManyToManyField(WikiCaseFatalityRate)
-    case_fatality_rate = models.ManyToManyField(WikiMortalityRate)
-    deaths = models.ManyToManyField(WikiDeath)
+    frequency = models.ForeignKey(WikiFrequency, null=True, on_delete=models.SET_NULL)
+    mortality_rate = models.ForeignKey(WikiCaseFatalityRate, null=True, on_delete=models.SET_NULL)
+    case_fatality_rate = models.ForeignKey(WikiMortalityRate, null=True, on_delete=models.SET_NULL)
+    deaths = models.ForeignKey(WikiDeath, null=True, on_delete=models.SET_NULL)
     symptoms = models.ManyToManyField(WikiSymptom)
     risk_factors = models.ManyToManyField(WikiRiskFactor)
     treatments = models.ManyToManyField(WikiTreatment)
@@ -142,13 +158,29 @@ class WikiDisease(models.Model):
     def __str__(self):
         return self.name
 
+    def to_dict(self):
+
+        specialty = self.specialty.all().first()
+        frequency = self.frequency
+        deaths = self.deaths
+        mortality_rate = self.mortality_rate
+
+        return {
+            'id': self.id,
+            'name': self.name,
+            'icd10': self.icd10,
+            'specialty': specialty.name if specialty else 'Unknown',
+            'frequency': frequency.display_value() if frequency else 'Unknown',
+            'deaths': deaths.display_value() if deaths else 'Unknown',
+            'mortality_rate': mortality_rate.dispaly_value() if mortality_rate else 'Unknown'
+        }
 
     def print(self):
         print("======================================================")
         print(self.name)
         print(self.specialty)
-        print(self.frequency.all())
-        print(self.mortality_rate.all())
+        print(self.frequency)
+        print(self.mortality_rate)
         print(self.case_fatality_rate)
         print(self.deaths)
         print(self.symptoms)

@@ -137,7 +137,7 @@ def handle_infobox(params: dict) -> 'WikiDisease':
         if type(freq) == float:
             val = ensure_frequency({'frequency_ratio': freq})
         if val:
-            disease['frequency'] = [val]
+            disease['frequency'] = val
 
     mortality_rate = params.get('mortality rate')
     if mortality_rate:
@@ -148,7 +148,7 @@ def handle_infobox(params: dict) -> 'WikiDisease':
         if type(freq) == float:
             val = ensure_mortality_rate({'frequency_ratio': freq})
         if val:
-            disease['mortality_rate'] = [val]
+            disease['mortality_rate'] = val
 
     cfr = params.get('case fatality rate')
     if cfr:
@@ -159,7 +159,7 @@ def handle_infobox(params: dict) -> 'WikiDisease':
         if type(freq) == float:
             val = ensure_case_fatality_rate({'frequency_ratio': freq})
         if val:
-            disease['case_fatality_rate'] = [val]
+            disease['case_fatality_rate'] = val
 
     deaths = params.get('deaths')
     if deaths:
@@ -170,7 +170,7 @@ def handle_infobox(params: dict) -> 'WikiDisease':
         if type(freq) == float:
             val = ensure_deaths({'frequency_ratio': freq})
         if val:
-            disease['deaths'] = [val]
+            disease['deaths'] = val
 
     symptoms = params.get('symptoms')
     if symptoms:
@@ -207,14 +207,14 @@ def handle_infobox(params: dict) -> 'WikiDisease':
 
 def get_disease_info(disease: WikiDisease) -> dict:
 
-    # TODO: Add ICD-10
     result = {
         'name': disease.name,
         'other_names': disease.other_names,
+        'icd10': disease.icd10,
         'specialty': [x for x in disease.specialty.all()],
-        'frequency': [x for x in disease.frequency.all()],
-        'mortality_rate': [x for x in disease.mortality_rate.all()],
-        'deaths': [x for x in disease.deaths.all()],
+        'frequency': disease.frequency,
+        'mortality_rate': disease.mortality_rate,
+        'deaths': disease.deaths,
         'symptoms': [x for x in disease.symptoms.all()],
         'risk_factors': [x for x in disease.risk_factors.all()],
         'treatments': [x for x in disease.treatments.all()],
@@ -223,7 +223,6 @@ def get_disease_info(disease: WikiDisease) -> dict:
         'medications': [x for x in disease.medications.all()],
         'causes': [x for x in disease.causes.all()]
     }
-
     return result
 
 
@@ -232,4 +231,4 @@ def get_diseases_by_symptom(symptom: WikiSymptom) -> List[WikiDisease]:
 
 
 def get_diseases_list():
-    return WikiDisease.objects.all()
+    return [ x.to_dict() for x in get_nonempty_diseases() ]

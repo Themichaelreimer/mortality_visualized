@@ -17,7 +17,10 @@ class Command(BaseCommand):
         for file in files:
             file_path = os.path.join(path,file)
             if os.path.isfile(file_path):
-                self.process_file(file_path)
+                try:
+                    self.process_file(file_path)
+                except Exception as e:
+                    print(f'type({e}) - {e}')
 
     # This is the "main" function per file
     def process_file(self, fpath) -> None:

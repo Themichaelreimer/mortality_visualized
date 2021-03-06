@@ -1,20 +1,28 @@
 from wiki.models import *
-
+from typing import List
 
 def make_disease(params: dict) -> WikiDisease:
 
     simple_props = {
         'name': params.get('name'),
+        'frequency': params.get('frequency'),
+        'mortality_rate': params.get('mortality_rate'),
+        'case_fatality_rate': params.get('case_fatality_rate'),
+        'deaths': params.get('deaths')
     }
+
     if params.get('other_names'):
         simple_props['other_names'] = params.get('other_names')
+
+    if params.get('icd10'):
+        simple_props['icd10'] = params.get('icd10')
 
     disease, _ = WikiDisease.objects.get_or_create(**simple_props)
 
     # Unpacks all m2m values/columns (which is most of the table)
     for k in params:
         v = params.get(k)
-        if k == 'name' or k == 'other_names':
+        if k in ['name', 'other_names', 'icd10', 'frequency', 'mortality_rate', 'case_fatality_rate', 'deaths']:
             continue
         field = getattr(disease, k)
         field.add(*v)
@@ -85,3 +93,7 @@ def ensure_deaths(params: dict) -> WikiDeath:
 def ensure_frequency(params: dict) -> WikiFrequency:
     res, _ = WikiFrequency.objects.get_or_create(**params)
     return res
+
+def get_nonempty_diseases() -> List[WikiDisease]:
+    results = WikiDisease.objects.all()  # TODO
+    return results
