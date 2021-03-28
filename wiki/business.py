@@ -172,6 +172,11 @@ def handle_infobox(params: dict) -> 'WikiDisease':
         if val:
             disease['deaths'] = val
 
+    # Try infer mortality rate from frequency and deaths
+    if not disease.get('mortality_rate'):
+        if type(disease.get('deaths')) == int and type(disease.get('frequency')) == int and not (disease.get('deaths') == 0):
+            disease['mortality_rate'] = disease.get('frequency') / disease.get('deaths')
+
     symptoms = params.get('symptoms')
     if symptoms:
         disease['symptoms'] = __extract_objects(symptoms, ensure_symptom)

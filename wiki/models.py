@@ -19,9 +19,8 @@ class WikiFrequency(models.Model):
     frequency_ratio = models.FloatField(null=True)
 
     def display_value(self):
-        if self.frequency_ratio:
-            return f'{self.frequency_ratio*100}%'
-        return f'{self.frequency_int * 100 / 7500000000}%'
+        val = self.frequency_ratio if self.frequency_ratio else self.frequency_int / 7500000000
+        return unit_rule(100*val)
 
     def __str__(self):
         if self.frequency_int:
@@ -35,9 +34,11 @@ class WikiDeath(models.Model):
     frequency_ratio = models.FloatField(null=True)
 
     def display_value(self):
-        if self.frequency_ratio:
-            return f'{self.frequency_ratio*100}%'
-        return f'{self.frequency_int * 100 / 7500000000}%'
+        #if self.frequency_ratio:
+        #    return f'{self.frequency_ratio*100}%'
+        #return f'{self.frequency_int * 100 / 7500000000}%'
+        val = self.frequency_ratio if self.frequency_ratio else self.frequency_int / 7500000000
+        return unit_rule(100*val)
 
     def __str__(self):
         if self.frequency_int:
@@ -63,8 +64,8 @@ class WikiMortalityRate(models.Model):
 
     def display_value(self):
         if self.frequency_ratio:
-            return f'{self.frequency_ratio*100}%'
-        return f'{self.frequency_int * 100 / 7500000000}%'
+            return f'{self.frequency_ratio*100} %'
+        return f'{self.frequency_int * 100 / 7500000000} %'
 
     def __str__(self):
         if self.frequency_int:
@@ -163,7 +164,14 @@ class WikiDisease(models.Model):
         specialty = self.specialty.all().first()
         frequency = self.frequency
         deaths = self.deaths
-        mortality_rate = self.mortality_rate
+
+        if self.mortality_rate:
+            mortality_rate = self.mortality_rate.display_value()
+        elif deaths and deaths.frequency_int and frequency and frequency.frequency_int and frequency.frequency_int is not 0:
+            mortality_rate = deaths.frequency_int / frequency.frequency_int
+            mortality_rate = unit_rule(100 * mortality_rate)
+        else:
+            mortality_rate = 'Unknown'
 
         return {
             'id': self.id,
@@ -172,7 +180,7 @@ class WikiDisease(models.Model):
             'specialty': specialty.name if specialty else 'Unknown',
             'frequency': frequency.display_value() if frequency else 'Unknown',
             'deaths': deaths.display_value() if deaths else 'Unknown',
-            'mortality_rate': mortality_rate.dispaly_value() if mortality_rate else 'Unknown'
+            'mortality_rate': mortality_rate
         }
 
     def print(self):
@@ -191,5 +199,17 @@ class WikiDisease(models.Model):
         print(self.medications)
         print(self.causes)
         print("=====================================================")
+
+
+def unit_rule(val) -> str:
+    if val == 0:
+        return "0.0000 %"
+    if val < 1E-8:
+        return f"{round(val*1E9,4)} n%"
+    if val < 1E-5:
+        return f"{round(val*1E6,4)} µ%"
+    if val < 1E-2:
+        return f"{round(val*1E3,4)} m%"
+    return f"{round(val,4)} %"
 
 

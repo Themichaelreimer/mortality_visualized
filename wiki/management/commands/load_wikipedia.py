@@ -12,7 +12,7 @@ class Command(BaseCommand):
     help = 'Loads wikipedia HTML into the articles table. Should run after wikipedia_collector.py'
 
     def handle(self, *args, **options):
-        path = os.path.join('data','wikipedia')
+        path = os.path.join('data', 'wikipedia')
         files = os.listdir(path)
         for file in files:
             file_path = os.path.join(path,file)
@@ -72,6 +72,7 @@ class Command(BaseCommand):
         first = paragraphs[0].text
         text = ' '.join([p.text for p in paragraphs])
         return first, text
+
 
     @staticmethod
     def process_infobox(soup: BeautifulSoup, title:str):
