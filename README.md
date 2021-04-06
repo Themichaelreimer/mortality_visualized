@@ -18,14 +18,12 @@ TODO: Flesh this out more
 - `covid` app, which is focused on covid-19 related visualizations and daily case-rates/death rates
 - `disease` app, which is focused on disease incidence/prevalence and mortality. Ideally this could expand out into signs/symptoms, treatments, etc, but I doubt the data exists in a nice and free way
 - `life_tables` app, which compares various metrics of all-cause mortality across age/sex/location
+- Disease Graph, showing common symptoms, treatments, differential diagnosises, etc
 
 # TODO:
-- Start front end
 - Add deaths in covid time series data
 - Make `disease` app if hmd looks general enough; otherwise `hmd` app (`hmd` means "Human Mortality Database")
-- Make `life_tables` app; make visualizations based on life tables in different places with drill down
 - Better set up instructions, in case I collab with someone who isn't a soft. engineer
-- Make data downloader scripts
 
 ## Data Sources:
 Johns Hopkins: Covid time series data
