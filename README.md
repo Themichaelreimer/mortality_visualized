@@ -4,11 +4,14 @@
 This project aims to provide data visualizations and fun/useful stats about diseases and general mortality.
 
 ## Technology Stack:
-Backend: Python 3.7 <=; Django 3; mysql server
+Backend: Python 3.7 <=; Django 3
+
+Database: Mysql Server >= 8.0
+
 Frontend: Vue.js
 
 # Setup
-TODO: Flesh this out more
+TODO: Flesh out instructions more
 
 - Install python3, pip, django
 
@@ -21,11 +24,20 @@ TODO: Flesh this out more
 - Disease Graph, showing common symptoms, treatments, differential diagnosises, etc
 
 # TODO:
+- Design disease graph
 - Add deaths in covid time series data
-- Make `disease` app if hmd looks general enough; otherwise `hmd` app (`hmd` means "Human Mortality Database")
+- Covid frontend
 - Better set up instructions, in case I collab with someone who isn't a soft. engineer
 
 ## Data Sources:
 Johns Hopkins: Covid time series data
 
 Human Mortality Database: death statistics by ICD code
+
+Wikipedia: Low quality data on frequency, mortality rate, symptoms, differential diagnosis, tests, etc
+
+## Gifs
+
+![Disease Table](https://github.com/Themichaelreimer/mortality-frontend/blob/master/table.gif?raw=true)
+
+![Life Table](https://github.com/Themichaelreimer/mortality-frontend/blob/master/graph.gif?raw=true)
