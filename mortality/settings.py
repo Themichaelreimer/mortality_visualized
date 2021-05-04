@@ -37,6 +37,8 @@ CSRF_TRUSTED_ORIGINS = [
     'change.allowed.com',
 ]
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # Application definition
 
 INSTALLED_APPS = [
