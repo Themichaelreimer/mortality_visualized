@@ -25,7 +25,7 @@ SECRET_KEY = '*j0rudf=32cn+_)bw+r9j7wo)&q40r0-k5dlml5i278en%yz10'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['149.28.113.52', 'api.medistat.online']
 
 CORS_ALLOW_ALL_ORIGINS = True  # Just to check the CORS module is even working
 CORS_ALLOWED_HOSTS = [
