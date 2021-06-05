@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.cache import cache
+from django.core.cache.utils import make_template_fragment_key
 from hmd.models import *
 
 
@@ -14,8 +16,13 @@ def add_access_control_headers(resp):
 
 @csrf_exempt
 def get_countries(request) -> JsonResponse:
+    key = "countries"
+    result = cache.get(key)
+    if result:
+        return result
     countries = Country.objects.all().values('id', 'name').order_by('name')
     data = list(countries)
+    
     return add_access_control_headers(JsonResponse(data, safe=False))
 
 

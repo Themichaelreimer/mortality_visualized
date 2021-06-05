@@ -30,11 +30,12 @@ ALLOWED_HOSTS = ['149.28.113.52', 'api.medistat.online']
 CORS_ALLOW_ALL_ORIGINS = True  # Just to check the CORS module is even working
 CORS_ALLOWED_HOSTS = [
     "http://localhost:8080",
+    "https://medistat.online"
     ]
 
 #TODO
 CSRF_TRUSTED_ORIGINS = [
-    'change.allowed.com',
+    'api.medistat.com',
 ]
 
 # Application definition
@@ -96,6 +97,12 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
