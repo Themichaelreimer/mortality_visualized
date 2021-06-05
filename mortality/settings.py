@@ -38,6 +38,8 @@ CSRF_TRUSTED_ORIGINS = [
     'api.medistat.com',
 ]
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # Application definition
 
 INSTALLED_APPS = [
