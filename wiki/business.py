@@ -1,6 +1,7 @@
 import re
 from typing import Union, List
 
+from django.core.cache import cache
 from wiki.query import *
 
 
@@ -236,4 +237,11 @@ def get_diseases_by_symptom(symptom: WikiSymptom) -> List[WikiDisease]:
 
 
 def get_diseases_list():
-    return [ x.to_dict() for x in get_nonempty_diseases() ]
+    cache_key = "disease_list"
+    result = cache.get(cache_key)
+    if result:
+        return result
+    
+    result = [ x.to_dict() for x in get_nonempty_diseases() ]
+    cache.set(cache_key, result)
+    return result

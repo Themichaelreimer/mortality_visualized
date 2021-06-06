@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import socket
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '*j0rudf=32cn+_)bw+r9j7wo)&q40r0-k5dlml5i278en%yz10'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False if socket.getfqdn() in ['api.medistat.online']  else True
 
-ALLOWED_HOSTS = ['149.28.113.52', 'api.medistat.online']
+ALLOWED_HOSTS = ['127.0.0.1', 'api.medistat.online']
 
 CORS_ALLOW_ALL_ORIGINS = True  # Just to check the CORS module is even working
 CORS_ALLOWED_HOSTS = [
@@ -101,7 +102,7 @@ DATABASES = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': '127.0.0.1:11211',
     }
 }
