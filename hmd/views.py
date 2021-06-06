@@ -60,8 +60,8 @@ def get_life_table(request) -> JsonResponse:
     country = request.POST.get('country')
     sex = request.POST.get('sex').lower()[0]
     year = request.POST.get('year')
-    cache_key = f"{country}{year}{sex}"
-    cache_key = "".join([c for c in cache_key if c in string.letters or c in string.digits])  # memcache keys are a little restrictive
+    cache_key = f"{country}{year}{sex}".lower()
+    cache_key = "".join([c for c in cache_key if c in string.ascii_lowercase or c in string.digits])  # memcache keys are a little restrictive
 
     life_table = LifeTable.objects.filter(
         country__name=country,
