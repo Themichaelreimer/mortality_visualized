@@ -34,9 +34,6 @@ class WikiDeath(models.Model):
     frequency_ratio = models.FloatField(null=True)
 
     def display_value(self):
-        #if self.frequency_ratio:
-        #    return f'{self.frequency_ratio*100}%'
-        #return f'{self.frequency_int * 100 / 7500000000}%'
         val = self.frequency_ratio if self.frequency_ratio else self.frequency_int / 7500000000
         return unit_rule(100*val)
 

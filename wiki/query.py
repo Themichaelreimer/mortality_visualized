@@ -1,6 +1,7 @@
 from wiki.models import *
 from typing import List
 
+
 def make_disease(params: dict) -> WikiDisease:
 
     simple_props = {

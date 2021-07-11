@@ -80,6 +80,7 @@ def __try_recognise_ratio(text: str) -> Union[float, None]:
     input = re.sub(r"thousand", r"1000 ", input)
     input = re.sub(r"million", r"1000000 ", input)
     input = re.sub(r"billion", r"1000000000 ", input)
+    input = re.sub(r"%", r" / 100", input)  # Causes "30%" -> "30 / 100" -> 0.3, interpreted as a ratio
 
     tokens = [x for x in input.split()]
 
@@ -149,6 +150,9 @@ def handle_infobox(params: dict) -> 'WikiDisease':
         if type(freq) == float:
             val = ensure_mortality_rate({'frequency_ratio': freq})
         if val:
+            """ If survival was reported instead of mortality, invert the statistic """
+            if "survival" in mortality_rate:
+                val = 1 - val
             disease['mortality_rate'] = val
 
     cfr = params.get('case fatality rate')
@@ -242,6 +246,6 @@ def get_diseases_list():
     if result:
         return result
     
-    result = [ x.to_dict() for x in get_nonempty_diseases() ]
+    result = [x.to_dict() for x in get_nonempty_diseases()]
     cache.set(cache_key, result)
     return result
