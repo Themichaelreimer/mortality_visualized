@@ -1,7 +1,11 @@
 from django.db import models
 
 # Create your models here.
-
+"""
+    The models in this file are deprecated. From Phase2 and onwards, Diseases should be modeled 
+    using disease/models.py. The models there are more general and better fit a
+    'multiple values from different sources' model
+"""
 
 class Article(models.Model):
     """

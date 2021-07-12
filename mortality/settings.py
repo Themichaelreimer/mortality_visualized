@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'hmd',
     'covid',
     'wiki',
+    'disease'
 ]
 
 MIDDLEWARE = [

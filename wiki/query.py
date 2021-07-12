@@ -95,6 +95,7 @@ def ensure_frequency(params: dict) -> WikiFrequency:
     res, _ = WikiFrequency.objects.get_or_create(**params)
     return res
 
+
 def get_nonempty_diseases() -> List[WikiDisease]:
     results = WikiDisease.objects.all()  # TODO
     return results
